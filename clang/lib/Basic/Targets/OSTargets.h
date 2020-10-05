@@ -862,7 +862,13 @@ class LLVM_LIBRARY_VISIBILITY EmscriptenTargetInfo
   void getOSDefines(const LangOptions &Opts, const llvm::Triple &Triple,
                     MacroBuilder &Builder) const final {
     WebAssemblyOSTargetInfo<Target>::getOSDefines(Opts, Triple, Builder);
-    Builder.defineMacro("__EMSCRIPTEN__");
+    // NOTE: For Faasm, we need to use the Emscripten target to build shared 
+    // libraries, but we don't actually want any of the emscripten features.
+    //
+    // See htps://bugs.llvm.org/show_bug.cgi?id=42714
+    //
+    // Builder.defineMacro("__EMSCRIPTEN__");
+    Builder.defineMacro("__wasi__");
   }
 
 public:
